@@ -14,7 +14,6 @@ import {
     ApiOperation,
     ApiOAuth2,
     ApiResponse,
-    ApiProduces,
 } from '@nestjs/swagger'
 import { GetCharacterDto } from './dto/get-character.dto'
 import { CharacterSummary } from './models/character-summary.model'

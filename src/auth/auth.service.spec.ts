@@ -1,17 +1,10 @@
 import { Test } from "@nestjs/testing"
 import { AuthService } from "./auth.service"
 import { JwtService } from '@nestjs/jwt'
-import { BnetProfile } from './bnet-profile.interface'
 
 const mockJwtService = () => ({
     sign: jest.fn()
 })
-
-const mockBnetProfile: BnetProfile = {
-    id: 52073071,
-    battletag: 'Player#12345',
-    token: 'US5Z4f6ZEk1rXDELlZdWYRttH2TFdSnYYM'
-  }
 
 describe('AuthService', () => {
     let authService: AuthService
