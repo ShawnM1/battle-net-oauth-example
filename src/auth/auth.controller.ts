@@ -16,7 +16,7 @@ export class AuthController {
 
     @Get('bnet/callback')
     @UseGuards(AuthGuard('bnet'))
-    @ApiOperation({ summary: 'Callback from bnet provider. Returns a JWT' })
+    @ApiOperation({ summary: 'Callback from bnet provider. Returns a JWT to used as a authorization bearer token to protected endpoints' })
     bnetLoginCallback(@Req() request) {
         const jwt = request.user.token
         return jwt

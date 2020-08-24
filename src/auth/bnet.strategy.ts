@@ -17,7 +17,6 @@ export class BnetStrategy extends PassportStrategy(Strategy, 'bnet') {
     }
     async validate(accessToken, refreshToken, profile: BnetProfile, done: Function) {
         try {
-            console.log(accessToken)
             const payload = { battleTag: profile.battletag, token: profile.token }
             const token = await this.authService.validateOAuthLogin(payload)
             const user = { token }
