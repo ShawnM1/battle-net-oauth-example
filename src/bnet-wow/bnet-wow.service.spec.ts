@@ -1,50 +1,52 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { BnetWowService } from './bnet-wow.service'
-import { HttpService } from '@nestjs/common'
 import { GetCharacterDto } from './dto/get-character.dto'
 import { CharacterSummary } from './models/character-summary.model'
-import { AxiosResponse } from 'axios'
-import { of } from 'rxjs'
+import { RestDataService } from '../common/rest-data.service'
 
 const mockGetCharacterDto: GetCharacterDto = {
     characterName: 'soupinacan',
-    realmName: 'malorne'
+    realmName: 'malorne',
 }
 
 const mockRequest = {
-  user: {
-    token: '12345'
-  }
-}
-
-const mockHttpService = {
-  get: jest.fn()
+    user: {
+        token: '12345',
+    },
 }
 
 const mockBlizzardApiResponse = {
-  id: '1',
-  name: 'player1',
-  level: 60,
-  // eslint-disable-next-line @typescript-eslint/camelcase
-  achievement_points: 800
+    id: '1',
+    name: 'player1',
+    level: 60,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    achievement_points: 800,
 }
 
-const mockHttpResponse: AxiosResponse = {
-  data: mockBlizzardApiResponse,
-  status: 200,
-  statusText: 'OK',
-  headers: {},
-  config: {}
+const mockRestDataService = {
+    getCall: jest.fn(),
+}
+
+const expectedHeaders = {
+    headers: {
+        Authorization: `Bearer ${mockRequest.user.token}`,
+        'Battlenet-Namespace': 'profile-us',
+    },
 }
 
 describe('BnetWowService', () => {
     let bnetWowService: BnetWowService
+    let restDataService
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [BnetWowService, { provide: HttpService, useValue: mockHttpService}],
+            providers: [
+                BnetWowService,
+                { provide: RestDataService, useValue: mockRestDataService },
+            ],
         }).compile()
         bnetWowService = module.get<BnetWowService>(BnetWowService)
+        restDataService = module.get<RestDataService>(RestDataService)
     })
 
     it('should be defined', () => {
@@ -52,22 +54,22 @@ describe('BnetWowService', () => {
     })
 
     describe('getCharacterProfileData', () => {
-        it('should call the blizzard api and return CharacterSummary', async () => {
-          const httpServiceSpy = mockHttpService.get.mockImplementation(()=> { return of(mockHttpResponse) })
-          const expectedUrl = `https://us.api.blizzard.com/profile/wow/character/${mockGetCharacterDto.realmName}/${mockGetCharacterDto.characterName}?locale=en_US&access_token=${mockRequest.user.token}`
-          const expectedHeaders = {
-            headers: {
-                'Authorization': `Bearer ${mockRequest.user.token}`,
-                'Battlenet-Namespace': 'profile-us',
-            }
-          }
-          const characterSummary: CharacterSummary = await bnetWowService.getCharacterProfileData(mockRequest, mockGetCharacterDto)
+        it('should call the rest data service and return CharacterSummary', async () => {
+            restDataService.getCall.mockResolvedValue(mockBlizzardApiResponse)
+            const expectedUrl = `https://us.api.blizzard.com/profile/wow/character/${mockGetCharacterDto.realmName}/${mockGetCharacterDto.characterName}?locale=en_US&access_token=${mockRequest.user.token}`
+            const characterSummary: CharacterSummary = await bnetWowService.getCharacterProfileData(
+                mockRequest,
+                mockGetCharacterDto,
+            )
 
-          expect(httpServiceSpy).toHaveBeenCalledWith(expectedUrl,expectedHeaders)
-          expect(characterSummary.level).toEqual(60)
-          expect(characterSummary.name).toEqual(`player1`)
-          expect(characterSummary.id).toEqual('1')
-          expect(characterSummary.achievementPoints).toEqual(800)
+            expect(mockRestDataService.getCall).toHaveBeenCalledWith(
+                expectedUrl,
+                expectedHeaders,
+            )
+            expect(characterSummary.level).toEqual(60)
+            expect(characterSummary.name).toEqual(`player1`)
+            expect(characterSummary.id).toEqual('1')
+            expect(characterSummary.achievementPoints).toEqual(800)
         })
     })
 })

@@ -17,6 +17,8 @@ import {
 } from '@nestjs/swagger'
 import { GetCharacterDto } from './dto/get-character.dto'
 import { CharacterSummary } from './models/character-summary.model'
+import { Request } from 'express'
+import { CharacterTitles } from './models/character-titles.model'
 
 @Controller('bnet-wow')
 @UseGuards(AuthGuard('jwt'))
@@ -33,9 +35,20 @@ export class BnetWowController {
         type: CharacterSummary,
     })
     async getCharacterProfileData(
-        @Req() request,
+        @Req() request: Request,
         @Query(ValidationPipe) getCharacterDto: GetCharacterDto,
     ): Promise<CharacterSummary> {
         return await this.bnetWowService.getCharacterProfileData(request,getCharacterDto)
+    }
+
+    @Get('character-titles')
+    @ApiResponse({
+        description: 'player character titles',
+        status: HttpStatus.OK,
+        type: CharacterTitles,
+    })
+    @ApiOperation({ summary: 'Returns all player titles' })
+    async getCharacterTitles(@Req() request: Request, @Query(ValidationPipe) getCharacterDto: GetCharacterDto): Promise<CharacterTitles> {
+        return await this.bnetWowService.getCharacterTitles(request, getCharacterDto)
     }
 }

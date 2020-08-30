@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BnetWowController } from './bnet-wow.controller';
 import { BnetWowService } from './bnet-wow.service';
 import { HttpModule } from '@nestjs/common';
+import { RestDataService } from '../common/rest-data.service'
 
 const mockBnetWowService = {
   getCharacterProfileData: jest.fn()
@@ -14,7 +15,7 @@ describe('BnetWow Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
       controllers: [BnetWowController],
-      providers: [{ provide: BnetWowService, useValue: mockBnetWowService}]
+      providers: [{ provide: BnetWowService, useValue: mockBnetWowService}, RestDataService]
     }).compile();
 
     controller = module.get<BnetWowController>(BnetWowController);
