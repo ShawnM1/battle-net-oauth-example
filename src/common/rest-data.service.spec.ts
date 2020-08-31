@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { RestDataService } from './rest-data.service'
-import { HttpService, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { HttpService, InternalServerErrorException } from '@nestjs/common'
 import { of, throwError } from 'rxjs'
 
 const mockHttpService = {
