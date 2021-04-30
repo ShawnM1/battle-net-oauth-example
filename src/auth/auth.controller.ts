@@ -9,7 +9,6 @@ export class AuthController {
     @Get('bnet')
     @UseGuards(AuthGuard('bnet'))
     @ApiOperation({ summary: 'Starts the bnet OAuth2 login flow' })
-
     bnetLogin() {
         // initiates the bnet OAuth2 login flow
     }

@@ -5,11 +5,13 @@ import { HttpModule } from '@nestjs/common';
 import { RestDataService } from '../common/rest-data.service'
 
 const mockBnetWowService = {
-  getCharacterProfileData: jest.fn()
+  getCharacterProfileData: jest.fn(),
+  getCharacterTitles: jest.fn()
 }
 
 describe('BnetWow Controller', () => {
   let controller: BnetWowController;
+  let bnetWowService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +21,7 @@ describe('BnetWow Controller', () => {
     }).compile();
 
     controller = module.get<BnetWowController>(BnetWowController);
+    bnetWowService = module.get<BnetWowService>(BnetWowService)
   });
 
   it('should be defined', () => {
@@ -26,9 +29,16 @@ describe('BnetWow Controller', () => {
   });
 
   describe('getCharacterProfileData', () => {
-    it('should the bnet service getCharacterProfileData', async () => {
+    it('should call the bnet service getCharacterProfileData', async () => {
       await controller.getCharacterProfileData(null, null)
-      expect(mockBnetWowService.getCharacterProfileData).toHaveBeenCalled()
+      expect(bnetWowService.getCharacterProfileData).toHaveBeenCalled()
+    })
+  })
+  describe('getCharacterTitles', () => {
+    it('should call the bnet service getCharacterTitles', async () => {
+      await controller.getCharacterTitles(null, null)
+      expect(bnetWowService.getCharacterTitles).toHaveBeenCalled()
+      
     })
   })
 });

@@ -10,7 +10,8 @@ export class RestDataService {
         return this.httpService.get(url, config)
         .pipe(
             catchError(error => {
-                throw new InternalServerErrorException()
+                console.log(JSON.stringify(error))
+                throw new InternalServerErrorException(error)
             }),
             map((response: AxiosResponse) => {
                 return response.data

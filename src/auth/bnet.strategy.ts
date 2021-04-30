@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-bnet'
@@ -11,6 +12,7 @@ export class BnetStrategy extends PassportStrategy(Strategy, 'bnet') {
             clientID: process.env.BNET_CLIENT_ID,
             clientSecret: process.env.BNET_CLIENT_SECRET,
             callbackURL: 'http://localhost:3000/auth/bnet/callback',
+            grant_type: "authorization_code",
             scope: 'wow.profile',
             region: 'us',
         })

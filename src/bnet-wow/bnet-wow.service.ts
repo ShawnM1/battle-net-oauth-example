@@ -8,6 +8,7 @@ import { CharacterProfileSummaryResponse } from 'src/external/interfaces/charact
 import { CharacterTitlesSummaryResponse } from 'src/external/interfaces/character-titles-summary.response'
 import { CharacterTitles, Title } from './models/character-titles.model'
 import { RestDataService } from '../common/rest-data.service'
+import { Request } from 'express'
 
 
 @Injectable()
@@ -55,6 +56,16 @@ export class BnetWowService {
         })
 
         return characterTitles
+    }
+
+    async getCharacterPvpSummary(request, getCharacterDto: GetCharacterDto) {
+        const { token } = request.user
+        const { realmName, characterName } = getCharacterDto
+        const url = `https://us.api.blizzard.com/profile/wow/character/${realmName}/${characterName}/pvp-summary?locale=en_US&access_token=${token}`
+
+        const response: any = await this.restDataService.getCall(url, this.getAxiosRequestConfig(token))
+
+        return response
     }
 
     private getAxiosRequestConfig(token: string): AxiosRequestConfig {

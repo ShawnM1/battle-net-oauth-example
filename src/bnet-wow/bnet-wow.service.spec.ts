@@ -23,6 +23,9 @@ const mockBlizzardApiResponse = {
     achievement_points: 800,
 }
 
+const mockBlizardTitlesResponse = {
+    
+}
 const mockRestDataService = {
     getCall: jest.fn(),
 }

@@ -51,4 +51,10 @@ export class BnetWowController {
     async getCharacterTitles(@Req() request: Request, @Query(ValidationPipe) getCharacterDto: GetCharacterDto): Promise<CharacterTitles> {
         return await this.bnetWowService.getCharacterTitles(request, getCharacterDto)
     }
+
+    @Get('character-pvp')
+    @ApiOperation({ summary: 'Returns character pvp summary' })
+    async getCharacterPvpSummary(@Req() request: Request, @Query(ValidationPipe) getCharacterDto: GetCharacterDto): Promise<any> {
+        return await this.bnetWowService.getCharacterPvpSummary(request, getCharacterDto)
+    }
 }
